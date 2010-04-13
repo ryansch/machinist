@@ -34,6 +34,9 @@ module Machinist
         association = lathe.object.class.reflect_on_association(attribute)
         if association && association.macro == :belongs_to && !value.nil?
           attributes[association.primary_key_name.to_sym] = value.id
+          if association.options[:polymorphic] == true
+            attributes[association.options[:foreign_type].to_sym] = value.class.name
+          end
         else
           attributes[attribute] = value
         end
